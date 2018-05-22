@@ -1,13 +1,12 @@
 package com.github.gaboso;
 
+import com.github.gaboso.entity.DurationTime;
 import com.github.gaboso.enumeration.State;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import static com.github.gaboso.enumeration.State.LUNCH;
@@ -16,12 +15,8 @@ import static com.github.gaboso.enumeration.State.START_OF_DAY;
 public class Calculador {
 
     private static final int DURATION_OF_DAY = 528;
-    private static final int START = 0;
-    private static final int START_LUNCH = 1;
-    private static final int END_LUNCH = 2;
-    private static final int END = 3;
 
-    private HashMap<String, List<String>> map = new HashMap<>();
+    private HashMap<Integer, DurationTime> days = new HashMap<>();
 
     public static void main(String[] args) {
         Calculador calculador = new Calculador();
@@ -29,26 +24,26 @@ public class Calculador {
         int quantityOfDays = 20;
 
         for (int i = 0; i < quantityOfDays; i++) {
-            List<String> durationsOfDay = calculador.getDurationsOfDay();
-            calculador.map.put((i + 1) + "", durationsOfDay);
+            DurationTime durationTime = calculador.getDurationTime();
+            calculador.days.put((i + 1), durationTime);
         }
 
         for (int i = 0; i < quantityOfDays; i++) {
-            String day = (i + 1) + "";
-            List<String> durations = calculador.map.get(day);
-            System.out.println("Dia: " + calculador.format(i + 1) + "| " +
-                    durations.get(START) + " - " +
-                    durations.get(START_LUNCH) + " - " +
-                    durations.get(END_LUNCH) + " - " +
-                    durations.get(END));
+            int day = i + 1;
+            DurationTime durationTime = calculador.days.get(day);
+            System.out.println("Dia: " + day + " | " +
+                    durationTime.getStartHour() + " - " +
+                    durationTime.getStartLunchHour() + " - " +
+                    durationTime.getEndLunchHour() + " - " +
+                    durationTime.getEndHour());
         }
 
     }
 
-    private List<String> getDurationsOfDay() {
-        int startMinutes = getMinutes();
+    private DurationTime getDurationTime() {
+        int startMinutes = generateMinutes();
         int startHour = getStartHour(startMinutes, START_OF_DAY);
-        int startLunchMinutes = getMinutes();
+        int startLunchMinutes = generateMinutes();
         int startLunchHour = getStartHour(startLunchMinutes, LUNCH);
         int endLunchHour = startLunchHour + 1;
 
@@ -62,17 +57,13 @@ public class Calculador {
         int endHour = calendar.get(Calendar.HOUR_OF_DAY);
         int endMinutes = calendar.get(Calendar.MINUTE);
 
-        List<String> durations = new ArrayList<>();
-        durations.add(format(startHour) + ":" + format(startMinutes));
-        durations.add(format(startLunchHour) + ":" + format(startLunchMinutes));
-        durations.add(format(endLunchHour) + ":" + format(startLunchMinutes));
-        durations.add(format(endHour) + ":" + format(endMinutes));
+        DurationTime durationTime = new DurationTime();
+        durationTime.setStartHour(startHour, startMinutes);
+        durationTime.setStartLunchHour(startLunchHour, startLunchMinutes);
+        durationTime.setEndLunchHour(endLunchHour, startLunchMinutes);
+        durationTime.setEndHour(endHour, endMinutes);
 
-        return durations;
-    }
-
-    private String format(int number) {
-        return String.format("%02d", number);
+        return durationTime;
     }
 
     private Date calculateEndDate(Date startDate, Date startLunchDate, Date endLunchDate) {
@@ -110,7 +101,7 @@ public class Calculador {
         }
     }
 
-    private int getMinutes() {
+    private int generateMinutes() {
         Random random = new Random();
         return random.nextInt(60);
     }
