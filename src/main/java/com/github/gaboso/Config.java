@@ -2,7 +2,7 @@ package com.github.gaboso;
 
 public class Config {
     public static final int MINUTES_WORKED_BY_DAY = 528;
-    public static final int QUANTITY_OF_DAYS = 4;
+    public static final int QUANTITY_OF_DAYS = 3;
     public static final String WORKER_NAME = "John Doe";
     public static final String WORKER_PIS = "XXXXXXXXXXX";
     public static final String ENTERPRISE_NAME = "Fun Toys Inc.";
