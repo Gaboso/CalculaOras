@@ -2,40 +2,33 @@
 <html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8">
-        <title>Relatorio PDF</title>
+        <title>Justificativa de Ponto</title>
+
+        <link rel="stylesheet" type="text/css" media="all" href="style.css"/>
     </head>
 
-    <style>
-        .hora, .justificativa{
-            text-decoration: underline;
-        }
-        .tipoPonto{
-            font-weight: bold;
-        }
-    </style>
-
     <body>
-        <h3 style="text-align: center">AUTORIZAÇÃO PARA INCLUSÃO/ ALTERAÇÃO REGISTRO DE PONTO</h3>
+        <h3 class="center">AUTORIZAÇÃO PARA INCLUSÃO/ ALTERAÇÃO REGISTRO DE PONTO</h3>
 
-        <p style="text-align: justify; text-justify: inter-word">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
+        <p class="text-justify">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
 
         <div th:each="day : ${days}">
             <p>Data __/__/____</p>
             <div>
-                <label class="tipoPonto">( X ) ENTRADA</label> - Horário a registrar <label class="hora" th:text="${day.startHour}"></label>
-                <label class="tipoPonto">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="hora" th:text="${day.startLunchHour}"></label>
+                <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.startHour}"></label>
+                <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.startLunchHour}"></label>
                 <br>
-                <label class="tipoPonto">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="hora" th:text="${day.endLunchHour}"></label>
-                <label class="tipoPonto">( X ) SAÍDA</label> – Horário a registrar <label class="hora" th:text="${day.endHour}"></label>
+                <label class="bold">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="underline" th:text="${day.endLunchHour}"></label>
+                <label class="bold">( X ) SAÍDA</label> – Horário a registrar <label class="underline" th:text="${day.endHour}"></label>
                 <div th:switch="${enableJustificationAllDays}">
-                    <p th:case="true">Justificativa: <label class="justificativa">_____________________________________________________________________________________________________________________________________________________</label></p>
+                    <p th:case="true">Justificativa: <label class="underline">_____________________________________________________________________________________________________________________________________________________</label></p>
                 </div>
             </div>
             <br>
         </div>
 
         <div th:switch="${enableJustificationAllDays}">
-            <p th:case="false">Justificativa: <label class="justificativa">_____________________________________________________________________________________________________________________________________________________</label></p>
+            <p th:case="false">Justificativa: <label class="underline">_____________________________________________________________________________________________________________________________________________________</label></p>
         </div>
 
         <br>
@@ -48,7 +41,7 @@
         <br>
         <br>
 
-        <div style="text-decoration: underline; font-weight: bold">* Não rasurar. Os campos não preenchidos devem ser inutilizados</div>
+        <div class="bold underline">* Não rasurar. Os campos não preenchidos devem ser inutilizados</div>
         <p>A ser preenchido pelo Departamento administrativo</p>
         <p>Recebido em:_____/_____/_____  Por: ____________________________</p>
         <p>Inserido no sistema em:_____/_____/_____ Por: _____________________</p>

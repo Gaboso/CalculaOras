@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.thymeleaf.templatemode.TemplateMode.HTML;
@@ -46,12 +45,15 @@ public class GeneratePDF {
 
         ITextRenderer renderer = new ITextRenderer();
 
-        Path path = FileSystems.getDefault().getPath("").toAbsolutePath();
-        String baseUrl = "file://" + path + "/src/resources/";
-        renderer.setDocumentFromString(xHtml, baseUrl);
-        renderer.layout();
-
         try {
+            String baseUrl = FileSystems.getDefault()
+                    .getPath("src", "resources")
+                    .toUri()
+                    .toURL()
+                    .toString();
+            renderer.setDocumentFromString(xHtml, baseUrl);
+            renderer.layout();
+
             OutputStream outputStream = new FileOutputStream(OUTPUT_FILE);
             renderer.createPDF(outputStream);
             outputStream.close();

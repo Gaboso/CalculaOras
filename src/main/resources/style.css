@@ -1,0 +1,16 @@
+.underline {
+    text-decoration: underline;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+}

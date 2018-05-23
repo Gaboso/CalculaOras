@@ -41,6 +41,12 @@
             <version>3.0.6.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+
     </dependencies>
     
 </project>
