@@ -1,12 +1,15 @@
 package com.github.gaboso;
 
 import com.github.gaboso.entity.DurationTime;
+import com.github.gaboso.entity.Enterprise;
+import com.github.gaboso.entity.Worker;
 import com.github.gaboso.enumeration.State;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import static com.github.gaboso.enumeration.State.LUNCH;
@@ -16,28 +19,28 @@ public class Calculador {
 
     private static final int DURATION_OF_DAY = 528;
 
-    private HashMap<Integer, DurationTime> days = new HashMap<>();
-
     public static void main(String[] args) {
         Calculador calculador = new Calculador();
 
         int quantityOfDays = 20;
 
+        List<DurationTime> days = new ArrayList<>();
+
         for (int i = 0; i < quantityOfDays; i++) {
             DurationTime durationTime = calculador.getDurationTime();
-            calculador.days.put((i + 1), durationTime);
+            days.add(durationTime);
         }
 
-        for (int i = 0; i < quantityOfDays; i++) {
-            int day = i + 1;
-            DurationTime durationTime = calculador.days.get(day);
-            System.out.println("Dia: " + day + " | " +
-                    durationTime.getStartHour() + " - " +
-                    durationTime.getStartLunchHour() + " - " +
-                    durationTime.getEndLunchHour() + " - " +
-                    durationTime.getEndHour());
-        }
+        Worker worker = new Worker();
+        worker.setName("John Doe");
+        worker.setPis("XXXXXXXXXXX");
 
+        Enterprise enterprise = new Enterprise();
+        enterprise.setName("Fun Toys Inc.");
+        enterprise.setCnpj("60701020304050");
+
+        GeneratePDF generatePDF = new GeneratePDF();
+        generatePDF.download(days, worker, enterprise);
     }
 
     private DurationTime getDurationTime() {

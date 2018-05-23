@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <title>Relatorio PDF</title>
+    </head>
+    <body>
+    <h3 style="text-align: center">AUTORIZAÇÃO PARA INCLUSÃO/ ALTERAÇÃO REGISTRO DE PONTO</h3>
+
+    <p style="text-align: justify; text-justify: inter-word">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
+
+    <div th:each="day : ${days}">
+        <p>Data __/__/____</p>
+        <div>
+            ( X ) entrada - Horário a registrar <label th:text="${day.startHour}"></label>
+            ( X ) saída almoço – Horário a registrar <label th:text="${day.startLunchHour}"></label>
+            <br>
+            ( X ) retorno almoço - Horário a registrar <label th:text="${day.endLunchHour}"></label>
+            ( X ) saída – Horário a registrar <label th:text="${day.endHour}"></label>
+        </div>
+        <br>
+    </div>
+
+    <div>Justificativa: _____________________________________________________________________________________________________________________________________________________</div>
+
+    <br>
+    <br>
+    <br>
+
+    <pre>_________________________                     _______________________
+    Colaborador                                   Coordenador</pre>
+
+    <br>
+    <br>
+
+    <div style="text-decoration: underline; font-weight: bold">* Não rasurar. Os campos não preenchidos devem ser inutilizados</div>
+    <p>A ser preenchido pelo Departamento administrativo</p>
+    <p>Recebido em:_____/_____/_____  Por: ____________________________</p>
+    <p>Inserido no sistema em:_____/_____/_____ Por: _____________________</p>
+
+    </body>
+</html>
