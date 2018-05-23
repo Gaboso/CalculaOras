@@ -13,46 +13,46 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.gaboso.Config.CUSTOM_DAYS;
+import static com.github.gaboso.Config.DAYS;
+import static com.github.gaboso.Config.ENABLE_JUSTIFICATION_ALL_DAYS;
+import static com.github.gaboso.Config.ENTERPRISE_CNPJ;
+import static com.github.gaboso.Config.ENTERPRISE_NAME;
+import static com.github.gaboso.Config.MINUTES_WORKED_BY_DAY;
+import static com.github.gaboso.Config.QUANTITY_OF_DAYS;
+import static com.github.gaboso.Config.WORKER_NAME;
+import static com.github.gaboso.Config.WORKER_PIS;
 import static com.github.gaboso.enumeration.State.LUNCH;
 import static com.github.gaboso.enumeration.State.START_OF_DAY;
 
 public class Calculador {
 
-    private static final int DURATION_OF_DAY = 528;
-
     public static void main(String[] args) {
         Calculador calculador = new Calculador();
 
-        int quantityOfDays = 3;
+        List<Day> days = createDaysList();
 
-        List<Day> days = createDaysList(quantityOfDays, true);
-
-        for (int i = 0; i < quantityOfDays; i++) {
+        for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
             DurationTime durationTime = calculador.getDurationTime();
             days.get(i).setDurationTime(durationTime);
         }
 
-        Worker worker = new Worker();
-        worker.setName("John Doe");
-        worker.setPis("XXXXXXXXXXX");
-
-        Enterprise enterprise = new Enterprise();
-        enterprise.setName("Fun Toys Inc.");
-        enterprise.setCnpj("60701020304050");
+        Worker worker = new Worker(WORKER_NAME, WORKER_PIS);
+        Enterprise enterprise = new Enterprise(ENTERPRISE_NAME, ENTERPRISE_CNPJ);
 
         GeneratePDF generatePDF = new GeneratePDF();
-        generatePDF.download(days, worker, enterprise, true);
+        generatePDF.download(days, worker, enterprise, ENABLE_JUSTIFICATION_ALL_DAYS);
     }
 
-    private static List<Day> createDaysList(int totalDays, Boolean customDays){
+    private static List<Day> createDaysList() {
         List<Day> days = new ArrayList<>();
 
-        if(customDays){
-            days.add(new Day("01/01/2018"));
-            days.add(new Day("02/01/2018"));
-            days.add(new Day("03/01/2018"));
-        }else{
-            for (int i = 0; i < totalDays; i++) {
+        if (CUSTOM_DAYS) {
+            for (String dayMonthYearAsString : DAYS) {
+                days.add(new Day(dayMonthYearAsString));
+            }
+        } else {
+            for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
                 days.add(new Day("__/__/____"));
             }
         }
@@ -110,7 +110,7 @@ public class Calculador {
     }
 
     private Long getRemainingDuration(long durationUntilLunch) {
-        return DURATION_OF_DAY - durationUntilLunch;
+        return MINUTES_WORKED_BY_DAY - durationUntilLunch;
     }
 
     private int getStartHour(int startMinutes, State state) {

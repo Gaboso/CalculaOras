@@ -5,6 +5,11 @@ public class Enterprise {
     private String name;
     private String cnpj;
 
+    public Enterprise(String name, String cnpj) {
+        this.name = name;
+        this.cnpj = cnpj;
+    }
+
     public String getName() {
         return name;
     }

@@ -5,6 +5,11 @@ public class Worker {
     private String name;
     private String pis;
 
+    public Worker(String name, String pis) {
+        this.name = name;
+        this.pis = pis;
+    }
+
     public String getName() {
         return name;
     }
