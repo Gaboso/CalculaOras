@@ -4,7 +4,26 @@
         <meta charset="UTF-8">
         <title>Justificativa de Ponto</title>
 
-        <link rel="stylesheet" type="text/css" media="all" href="style.css"/>
+        <!--<link rel="stylesheet" type="text/css" media="all" href="style.css"/>-->
+
+        <style>
+            .underline {
+                text-decoration: underline;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .text-justify {
+                text-align: justify;
+                text-justify: inter-word;
+            }
+        </style>
     </head>
 
     <body>
@@ -13,13 +32,13 @@
         <p class="text-justify">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
 
         <div th:each="day : ${days}">
-            <p>Data __/__/____</p>
+            <p>Data: <label th:text="${day.dayMonthYearAsString}"></label></p>
             <div>
-                <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.startHour}"></label>
-                <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.startLunchHour}"></label>
+                <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.durationTime.startHour}"></label>
+                <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.durationTime.startLunchHour}"></label>
                 <br>
-                <label class="bold">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="underline" th:text="${day.endLunchHour}"></label>
-                <label class="bold">( X ) SAÍDA</label> – Horário a registrar <label class="underline" th:text="${day.endHour}"></label>
+                <label class="bold">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="underline" th:text="${day.durationTime.endLunchHour}"></label>
+                <label class="bold">( X ) SAÍDA</label> – Horário a registrar <label class="underline" th:text="${day.durationTime.endHour}"></label>
                 <div th:switch="${enableJustificationAllDays}">
                     <p th:case="true">Justificativa: <label class="underline">_____________________________________________________________________________________________________________________________________________________</label></p>
                 </div>

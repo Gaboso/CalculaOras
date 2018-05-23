@@ -1,5 +1,6 @@
 package com.github.gaboso;
 
+import com.github.gaboso.entity.Day;
 import com.github.gaboso.entity.DurationTime;
 import com.github.gaboso.entity.Enterprise;
 import com.github.gaboso.entity.Worker;
@@ -22,13 +23,13 @@ public class Calculador {
     public static void main(String[] args) {
         Calculador calculador = new Calculador();
 
-        int quantityOfDays = 20;
+        int quantityOfDays = 3;
 
-        List<DurationTime> days = new ArrayList<>();
+        List<Day> days = createDaysList(quantityOfDays, true);
 
         for (int i = 0; i < quantityOfDays; i++) {
             DurationTime durationTime = calculador.getDurationTime();
-            days.add(durationTime);
+            days.get(i).setDurationTime(durationTime);
         }
 
         Worker worker = new Worker();
@@ -41,6 +42,22 @@ public class Calculador {
 
         GeneratePDF generatePDF = new GeneratePDF();
         generatePDF.download(days, worker, enterprise, true);
+    }
+
+    private static List<Day> createDaysList(int totalDays, Boolean customDays){
+        List<Day> days = new ArrayList<>();
+
+        if(customDays){
+            days.add(new Day("01/01/2018"));
+            days.add(new Day("02/01/2018"));
+            days.add(new Day("03/01/2018"));
+        }else{
+            for (int i = 0; i < totalDays; i++) {
+                days.add(new Day("__/__/____"));
+            }
+        }
+
+        return days;
     }
 
     private DurationTime getDurationTime() {

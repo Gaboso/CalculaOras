@@ -1,5 +1,6 @@
 package com.github.gaboso;
 
+import com.github.gaboso.entity.Day;
 import com.github.gaboso.entity.DurationTime;
 import com.github.gaboso.entity.Enterprise;
 import com.github.gaboso.entity.Worker;
@@ -24,7 +25,7 @@ public class GeneratePDF {
     private static final String OUTPUT_FILE = "test.pdf";
     private static final String UTF_8 = "UTF-8";
 
-    public void download(List<DurationTime> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
+    public void download(List<Day> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/");
         templateResolver.setSuffix(".html");
