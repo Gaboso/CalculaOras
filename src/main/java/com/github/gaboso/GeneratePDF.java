@@ -25,7 +25,7 @@ public class GeneratePDF {
     private static final String OUTPUT_FILE = "test.pdf";
     private static final String UTF_8 = "UTF-8";
 
-    public void download(List<DurationTime> days, Worker worker, Enterprise enterprise) {
+    public void download(List<DurationTime> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/");
         templateResolver.setSuffix(".html");
@@ -39,6 +39,7 @@ public class GeneratePDF {
         context.setVariable("days", days);
         context.setVariable("worker", worker);
         context.setVariable("enterprise", enterprise);
+        context.setVariable("enableJustificationAllDays", enableJustificationAllDays);
 
         String renderedHtmlContent = templateEngine.process("template", context);
         String xHtml = convertToXhtml(renderedHtmlContent);

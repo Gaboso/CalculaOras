@@ -40,7 +40,7 @@ public class Calculador {
         enterprise.setCnpj("60701020304050");
 
         GeneratePDF generatePDF = new GeneratePDF();
-        generatePDF.download(days, worker, enterprise);
+        generatePDF.download(days, worker, enterprise, true);
     }
 
     private DurationTime getDurationTime() {
