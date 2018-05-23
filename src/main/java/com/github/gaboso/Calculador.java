@@ -27,10 +27,12 @@ import static com.github.gaboso.enumeration.State.START_OF_DAY;
 
 public class Calculador {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Calculador calculador = new Calculador();
 
         List<Day> days = createDaysList();
+
+        validateDays(days);
 
         for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
             DurationTime durationTime = calculador.getDurationTime();
@@ -42,6 +44,14 @@ public class Calculador {
 
         GeneratePDF generatePDF = new GeneratePDF();
         generatePDF.download(days, worker, enterprise, ENABLE_JUSTIFICATION_ALL_DAYS);
+    }
+
+    private static void validateDays(List<Day> days) throws Exception {
+        if (CUSTOM_DAYS && days.size() != QUANTITY_OF_DAYS) {
+            throw new Exception("Quantidade de dias inválida: Caso CUSTOM_DAYS seja TRUE, " +
+                    "é necessário informar valor para todos os dias na variável DAYS da classe Config." +
+                    "\nExemplo: Se QUANTITY_OF_DAYS for 5, devem existir 5 valores no array DAYS.");
+        }
     }
 
     private static List<Day> createDaysList() {
