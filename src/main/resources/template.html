@@ -32,7 +32,7 @@
         <p class="text-justify">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
 
         <div th:each="day : ${days}">
-            <p>Data: <label th:text="${day.dayMonthYearAsString}"></label></p>
+            <p>Data: <label th:text="${day.dayMonthYear}"></label></p>
             <div>
                 <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.durationTime.startHour}"></label>
                 <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.durationTime.startLunchHour}"></label>

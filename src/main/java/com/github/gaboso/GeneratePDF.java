@@ -1,82 +1,84 @@
 package com.github.gaboso;
 
+import com.github.gaboso.converter.TidyConverter;
 import com.github.gaboso.entity.Day;
-import com.github.gaboso.entity.DurationTime;
 import com.github.gaboso.entity.Enterprise;
 import com.github.gaboso.entity.Worker;
+import com.github.gaboso.template.TemplateHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.w3c.tidy.Tidy;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.nio.file.FileSystems;
 import java.util.List;
 
-import static org.thymeleaf.templatemode.TemplateMode.HTML;
+import static com.github.gaboso.Config.OUTPUT_FILE;
 
 public class GeneratePDF {
 
-    private static final String OUTPUT_FILE = "test.pdf";
-    private static final String UTF_8 = "UTF-8";
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.github.gaboso.GeneratePDF");
 
-    public void download(List<Day> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(HTML);
-        templateResolver.setCharacterEncoding(UTF_8);
+    private List<Day> days;
+    private Worker worker;
+    private Enterprise enterprise;
+    private Boolean enableJustificationAllDays;
 
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+    public GeneratePDF(List<Day> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
+        this.days = days;
+        this.worker = worker;
+        this.enterprise = enterprise;
+        this.enableJustificationAllDays = enableJustificationAllDays;
+    }
 
+    public void download() {
+        ClassLoaderTemplateResolver templateResolver = TemplateHelper.createTemplateResolver();
+        TemplateEngine templateEngine = TemplateHelper.createTemplateEngine(templateResolver);
+
+        Context context = createThymeleafContext();
+
+        String renderedHtmlContent = templateEngine.process("template", context);
+        String xhtml = TidyConverter.toXHTML(renderedHtmlContent);
+
+        ITextRenderer renderer = new ITextRenderer();
+
+        try (OutputStream outputStream = new FileOutputStream(OUTPUT_FILE)) {
+
+            String baseURL = getBaseURL();
+            renderer.setDocumentFromString(xhtml, baseURL);
+            renderer.layout();
+            renderer.createPDF(outputStream);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private String getBaseURL() {
+        try {
+            return FileSystems.getDefault()
+                    .getPath("src", "resources")
+                    .toUri()
+                    .toURL()
+                    .toString();
+        } catch (MalformedURLException e) {
+            LOGGER.error("Error while trying to get path", e);
+        }
+
+        return "";
+    }
+
+    private Context createThymeleafContext() {
         Context context = new Context();
         context.setVariable("days", days);
         context.setVariable("worker", worker);
         context.setVariable("enterprise", enterprise);
         context.setVariable("enableJustificationAllDays", enableJustificationAllDays);
-
-        String renderedHtmlContent = templateEngine.process("template", context);
-        String xHtml = convertToXhtml(renderedHtmlContent);
-
-        ITextRenderer renderer = new ITextRenderer();
-
-        try {
-            String baseUrl = FileSystems.getDefault()
-                    .getPath("src", "resources")
-                    .toUri()
-                    .toURL()
-                    .toString();
-            renderer.setDocumentFromString(xHtml, baseUrl);
-            renderer.layout();
-
-            OutputStream outputStream = new FileOutputStream(OUTPUT_FILE);
-            renderer.createPDF(outputStream);
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String convertToXhtml(String html) {
-        Tidy tidy = new Tidy();
-        tidy.setInputEncoding(UTF_8);
-        tidy.setOutputEncoding(UTF_8);
-        tidy.setXHTML(true);
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(html.getBytes(UTF_8));
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            tidy.parseDOM(inputStream, outputStream);
-            return outputStream.toString(UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return context;
     }
 
 }

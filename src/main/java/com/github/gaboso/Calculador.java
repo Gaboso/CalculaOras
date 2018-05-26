@@ -5,6 +5,9 @@ import com.github.gaboso.entity.DurationTime;
 import com.github.gaboso.entity.Enterprise;
 import com.github.gaboso.entity.Worker;
 import com.github.gaboso.enumeration.State;
+import com.github.gaboso.exception.BadConfigException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ import static com.github.gaboso.enumeration.State.START_OF_DAY;
 
 public class Calculador {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.github.gaboso.Calculador");
+
     public static void main(String[] args) throws Exception {
         Calculador calculador = new Calculador();
 
@@ -42,15 +47,13 @@ public class Calculador {
         Worker worker = new Worker(WORKER_NAME, WORKER_PIS);
         Enterprise enterprise = new Enterprise(ENTERPRISE_NAME, ENTERPRISE_CNPJ);
 
-        GeneratePDF generatePDF = new GeneratePDF();
-        generatePDF.download(days, worker, enterprise, ENABLE_JUSTIFICATION_ALL_DAYS);
+        GeneratePDF generatePDF = new GeneratePDF(days, worker, enterprise, ENABLE_JUSTIFICATION_ALL_DAYS);
+        generatePDF.download();
     }
 
-    private static void validateDays(List<Day> days) throws Exception {
+    private static void validateDays(List<Day> days) throws BadConfigException {
         if (CUSTOM_DAYS && days.size() != QUANTITY_OF_DAYS) {
-            throw new Exception("Quantidade de dias inválida: Caso CUSTOM_DAYS seja TRUE, " +
-                    "é necessário informar valor para todos os dias na variável DAYS da classe Config." +
-                    "\nExemplo: Se QUANTITY_OF_DAYS for 5, devem existir 5 valores no array DAYS.");
+            throw new BadConfigException();
         }
     }
 
@@ -58,12 +61,12 @@ public class Calculador {
         List<Day> days = new ArrayList<>();
 
         if (CUSTOM_DAYS) {
-            for (String dayMonthYearAsString : DAYS) {
-                days.add(new Day(dayMonthYearAsString));
+            for (String dayMonthYear : DAYS) {
+                days.add(new Day(dayMonthYear));
             }
         } else {
             for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
-                days.add(new Day("__/__/____"));
+                days.add(new Day("___/___/_____"));
             }
         }
 
@@ -113,7 +116,7 @@ public class Calculador {
         try {
             date = format.parse(hours + ":" + minutes);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         return date;

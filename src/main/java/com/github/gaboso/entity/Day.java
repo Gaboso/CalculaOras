@@ -1,23 +1,32 @@
 package com.github.gaboso.entity;
 
 public class Day {
+
+    private String dayMonthYear;
     private DurationTime durationTime;
-    private String dayMonthYearAsString;
 
     public Day() {
     }
 
-    public Day(String dayMonthYearAsString) {
-        this.dayMonthYearAsString = dayMonthYearAsString;
+    public Day(String dayMonthYear) {
+        this.dayMonthYear = dayMonthYear;
     }
 
     public Day(DurationTime durationTime) {
         this.durationTime = durationTime;
     }
 
-    public Day(DurationTime durationTime, String dayMonthYearAsString) {
+    public Day(String dayMonthYear, DurationTime durationTime) {
+        this.dayMonthYear = dayMonthYear;
         this.durationTime = durationTime;
-        this.dayMonthYearAsString = dayMonthYearAsString;
+    }
+
+    public String getDayMonthYear() {
+        return dayMonthYear;
+    }
+
+    public void setDayMonthYear(String dayMonthYear) {
+        this.dayMonthYear = dayMonthYear;
     }
 
     public DurationTime getDurationTime() {
@@ -28,11 +37,4 @@ public class Day {
         this.durationTime = durationTime;
     }
 
-    public String getDayMonthYearAsString() {
-        return dayMonthYearAsString;
-    }
-
-    public void setDayMonthYearAsString(String dayMonthYearAsString) {
-        this.dayMonthYearAsString = dayMonthYearAsString;
-    }
 }

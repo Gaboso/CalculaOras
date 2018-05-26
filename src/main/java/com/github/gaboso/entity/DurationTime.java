@@ -47,4 +47,5 @@ public class DurationTime {
     private String formatNumber(int number) {
         return String.format("%02d", number);
     }
+
 }
