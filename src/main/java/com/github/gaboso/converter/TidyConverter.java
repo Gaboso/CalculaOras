@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class TidyConverter {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.toString();
-    private static final Logger LOGGER = LoggerFactory.getLogger("com.github.gaboso.converter.TidyConverter");
+    private static final Logger LOGGER = LoggerFactory.getLogger(TidyConverter.class);
 
     private TidyConverter() {
     }

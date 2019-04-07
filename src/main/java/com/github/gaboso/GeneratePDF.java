@@ -22,7 +22,7 @@ import static com.github.gaboso.Config.OUTPUT_FILE;
 
 public class GeneratePDF {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("com.github.gaboso.GeneratePDF");
+    private static final Logger LOGGER = LoggerFactory.getLogger(GeneratePDF.class);
 
     private List<Day> days;
     private Worker worker;

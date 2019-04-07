@@ -9,63 +9,71 @@ import com.github.gaboso.exception.BadConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.github.gaboso.Config.CUSTOM_DAYS;
 import static com.github.gaboso.Config.DAYS;
-import static com.github.gaboso.Config.ENABLE_JUSTIFICATION_ALL_DAYS;
-import static com.github.gaboso.Config.ENTERPRISE_CNPJ;
-import static com.github.gaboso.Config.ENTERPRISE_NAME;
-import static com.github.gaboso.Config.MINUTES_WORKED_BY_DAY;
-import static com.github.gaboso.Config.QUANTITY_OF_DAYS;
-import static com.github.gaboso.Config.WORKER_NAME;
-import static com.github.gaboso.Config.WORKER_PIS;
 import static com.github.gaboso.enumeration.State.LUNCH;
 import static com.github.gaboso.enumeration.State.START_OF_DAY;
 
 public class Calculador {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("com.github.gaboso.Calculador");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Calculador.class);
+    private static Properties prop = new Properties();
 
     public static void main(String[] args) throws Exception {
         Calculador calculador = new Calculador();
+
+        try (InputStream input = Calculador.class.getClassLoader().getResourceAsStream("config.properties")) {
+
+            if (input == null) {
+                System.out.println("Sorry, unable to find config.properties");
+                return;
+            }
+
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         List<Day> days = createDaysList();
 
         validateDays(days);
 
-        for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
+        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+        for (int i = 0; i < quantityOfDays; i++) {
             DurationTime durationTime = calculador.getDurationTime();
             days.get(i).setDurationTime(durationTime);
         }
 
-        Worker worker = new Worker(WORKER_NAME, WORKER_PIS);
-        Enterprise enterprise = new Enterprise(ENTERPRISE_NAME, ENTERPRISE_CNPJ);
+        Worker worker = new Worker(prop.getProperty("worker.name"), prop.getProperty("worker.pis"));
+        Enterprise enterprise = new Enterprise(prop.getProperty("enterprise.name"), prop.getProperty("enterprise.cnpj"));
 
-        GeneratePDF generatePDF = new GeneratePDF(days, worker, enterprise, ENABLE_JUSTIFICATION_ALL_DAYS);
+        Boolean enableJustificationAllDays = Boolean.parseBoolean(prop.getProperty("days.enable.justification"));
+        GeneratePDF generatePDF = new GeneratePDF(days, worker, enterprise, enableJustificationAllDays);
         generatePDF.download();
     }
 
     private static void validateDays(List<Day> days) throws BadConfigException {
-        if (CUSTOM_DAYS && days.size() != QUANTITY_OF_DAYS) {
+        boolean customDays = Boolean.parseBoolean(prop.getProperty("days.custom"));
+        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));;
+        if (customDays && days.size() != quantityOfDays) {
             throw new BadConfigException();
         }
     }
 
     private static List<Day> createDaysList() {
         List<Day> days = new ArrayList<>();
+        boolean customDays = Boolean.parseBoolean(prop.getProperty("days.custom"));
 
-        if (CUSTOM_DAYS) {
-            for (String dayMonthYear : DAYS) {
-                days.add(new Day(dayMonthYear));
-            }
+        if (customDays) {
+            days = Arrays.stream(DAYS).map(Day::new).collect(Collectors.toList());
         } else {
-            for (int i = 0; i < QUANTITY_OF_DAYS; i++) {
+            int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+            for (int i = 0; i < quantityOfDays; i++) {
                 days.add(new Day("___/___/_____"));
             }
         }
@@ -123,7 +131,8 @@ public class Calculador {
     }
 
     private Long getRemainingDuration(long durationUntilLunch) {
-        return MINUTES_WORKED_BY_DAY - durationUntilLunch;
+        int minutesWorkedByDay = Integer.parseInt(prop.getProperty("minutes.worked"));
+        return minutesWorkedByDay - durationUntilLunch;
     }
 
     private int getStartHour(int startMinutes, State state) {
