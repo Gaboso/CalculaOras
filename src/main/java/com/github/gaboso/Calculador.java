@@ -12,7 +12,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.github.gaboso.Config.DAYS;
@@ -22,7 +28,7 @@ import static com.github.gaboso.enumeration.State.START_OF_DAY;
 public class Calculador {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Calculador.class);
-    private static Properties prop = new Properties();
+    private static final Properties prop = new Properties();
 
     public static void main(String[] args) throws Exception {
         Calculador calculador = new Calculador();
@@ -59,7 +65,8 @@ public class Calculador {
 
     private static void validateDays(List<Day> days) throws BadConfigException {
         boolean customDays = Boolean.parseBoolean(prop.getProperty("days.custom"));
-        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));;
+        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+
         if (customDays && days.size() != quantityOfDays) {
             throw new BadConfigException();
         }
