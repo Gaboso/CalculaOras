@@ -1,71 +1,49 @@
 package com.github.gaboso;
 
+import com.github.gaboso.config.Props;
 import com.github.gaboso.entity.Day;
 import com.github.gaboso.entity.DurationTime;
-import com.github.gaboso.entity.Enterprise;
-import com.github.gaboso.entity.Worker;
 import com.github.gaboso.enumeration.State;
 import com.github.gaboso.exception.BadConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static com.github.gaboso.Config.DAYS;
 import static com.github.gaboso.enumeration.State.LUNCH;
 import static com.github.gaboso.enumeration.State.START_OF_DAY;
 
 public class Calculador {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Calculador.class);
-    private static final Properties prop = new Properties();
+    private static Props props = new Props();
 
     public static void main(String[] args) throws Exception {
         Calculador calculador = new Calculador();
 
-        try (InputStream input = Calculador.class.getClassLoader().getResourceAsStream("config.properties")) {
-
-            if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
-                return;
-            }
-
-            prop.load(input);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
         List<Day> days = createDaysList();
-
         validateDays(days);
 
-        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+        int quantityOfDays = props.getDaysQuantity();
         for (int i = 0; i < quantityOfDays; i++) {
             DurationTime durationTime = calculador.getDurationTime();
             days.get(i).setDurationTime(durationTime);
         }
 
-        Worker worker = new Worker(prop.getProperty("worker.name"), prop.getProperty("worker.pis"));
-        Enterprise enterprise = new Enterprise(prop.getProperty("enterprise.name"), prop.getProperty("enterprise.cnpj"));
-
-        Boolean enableJustificationAllDays = Boolean.parseBoolean(prop.getProperty("days.enable.justification"));
-        GeneratePDF generatePDF = new GeneratePDF(days, worker, enterprise, enableJustificationAllDays);
+        GeneratePDF generatePDF = new GeneratePDF(days, props);
         generatePDF.download();
     }
 
     private static void validateDays(List<Day> days) throws BadConfigException {
-        boolean customDays = Boolean.parseBoolean(prop.getProperty("days.custom"));
-        int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+        boolean customDays = props.getDaysCustom();
+        int quantityOfDays = props.getDaysQuantity();
 
         if (customDays && days.size() != quantityOfDays) {
             throw new BadConfigException();
@@ -74,12 +52,14 @@ public class Calculador {
 
     private static List<Day> createDaysList() {
         List<Day> days = new ArrayList<>();
-        boolean customDays = Boolean.parseBoolean(prop.getProperty("days.custom"));
+        boolean customDays = props.getDaysCustom();
 
         if (customDays) {
-            days = Arrays.stream(DAYS).map(Day::new).collect(Collectors.toList());
+            days = Arrays.stream(props.getDays())
+                         .map(Day::new)
+                         .collect(Collectors.toList());
         } else {
-            int quantityOfDays = Integer.parseInt(prop.getProperty("days.quantity"));
+            int quantityOfDays = props.getDaysQuantity();
             for (int i = 0; i < quantityOfDays; i++) {
                 days.add(new Day("___/___/_____"));
             }
@@ -138,7 +118,7 @@ public class Calculador {
     }
 
     private Long getRemainingDuration(long durationUntilLunch) {
-        int minutesWorkedByDay = Integer.parseInt(prop.getProperty("minutes.worked"));
+        int minutesWorkedByDay = props.getMinutesWorkedPerDay();
         return minutesWorkedByDay - durationUntilLunch;
     }
 

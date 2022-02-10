@@ -1,8 +1,9 @@
 package com.github.gaboso;
 
+import com.github.gaboso.config.Props;
 import com.github.gaboso.converter.TidyConverter;
 import com.github.gaboso.entity.Day;
-import com.github.gaboso.entity.Enterprise;
+import com.github.gaboso.entity.Employer;
 import com.github.gaboso.entity.Worker;
 import com.github.gaboso.template.TemplateHelper;
 import org.slf4j.Logger;
@@ -18,22 +19,23 @@ import java.net.MalformedURLException;
 import java.nio.file.FileSystems;
 import java.util.List;
 
-import static com.github.gaboso.Config.OUTPUT_FILE;
-
 public class GeneratePDF {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneratePDF.class);
 
-    private List<Day> days;
-    private Worker worker;
-    private Enterprise enterprise;
-    private Boolean enableJustificationAllDays;
+    private final List<Day> days;
+    private final Worker worker;
+    private final Employer enterprise;
+    private final Boolean enableJustificationAllDays;
+    private final String outputFileName;
 
-    public GeneratePDF(List<Day> days, Worker worker, Enterprise enterprise, Boolean enableJustificationAllDays) {
+    public GeneratePDF(List<Day> days, Props props) {
         this.days = days;
-        this.worker = worker;
-        this.enterprise = enterprise;
-        this.enableJustificationAllDays = enableJustificationAllDays;
+
+        worker = new Worker(props.getWorkerName(), props.getWorkerSocialSecurityId());
+        enterprise = new Employer(props.getEmployerName(), props.getEmployerSocialSecurityId());
+        enableJustificationAllDays = props.getEnableDaysJustification();
+        outputFileName = props.getOutputFileName();
     }
 
     public void download() {
@@ -47,7 +49,7 @@ public class GeneratePDF {
 
         ITextRenderer renderer = new ITextRenderer();
 
-        try (OutputStream outputStream = new FileOutputStream(OUTPUT_FILE)) {
+        try (OutputStream outputStream = new FileOutputStream(outputFileName)) {
 
             String baseURL = getBaseURL();
             renderer.setDocumentFromString(xhtml, baseURL);
@@ -61,10 +63,10 @@ public class GeneratePDF {
     private String getBaseURL() {
         try {
             return FileSystems.getDefault()
-                    .getPath("src", "resources")
-                    .toUri()
-                    .toURL()
-                    .toString();
+                              .getPath("src", "resources")
+                              .toUri()
+                              .toURL()
+                              .toString();
         } catch (MalformedURLException e) {
             LOGGER.error("Error while trying to get path", e);
         }
