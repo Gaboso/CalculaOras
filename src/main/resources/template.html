@@ -29,7 +29,9 @@
     <body>
         <h3 class="text-center">AUTORIZAÇÃO PARA INCLUSÃO/ ALTERAÇÃO REGISTRO DE PONTO</h3>
 
-        <p class="text-justify">Eu [[${worker.name}]], portador do PIS nº [[${worker.pis}]], registrado na empresa [[${enterprise.name}]], CNPJ [[${enterprise.cnpj}]] sob regime CLT autorizo que seja feito em minha folha de ponto a(s) seguinte(s) correção(es):</p>
+        <p class="text-justify">Eu [[${worker.name}]], portador do PIS nº [[${worker.socialSecurityId}]], registrado na empresa
+            [[${employer.name}]], CNPJ [[${employer.socialSecurityId}]] sob regime CLT autorizo que seja feito na minha folha de ponto a(s) seguinte(s)
+            correção(es):</p>
 
         <div th:each="day : ${days}">
             <p>Data: <label th:text="${day.dayMonthYear}"></label></p>

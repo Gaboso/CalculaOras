@@ -25,7 +25,7 @@ public class GeneratePDF {
 
     private final List<Day> days;
     private final Worker worker;
-    private final Employer enterprise;
+    private final Employer employer;
     private final Boolean enableJustificationAllDays;
     private final String outputFileName;
 
@@ -33,7 +33,7 @@ public class GeneratePDF {
         this.days = days;
 
         worker = new Worker(props.getWorkerName(), props.getWorkerSocialSecurityId());
-        enterprise = new Employer(props.getEmployerName(), props.getEmployerSocialSecurityId());
+        employer = new Employer(props.getEmployerName(), props.getEmployerSocialSecurityId());
         enableJustificationAllDays = props.getEnableDaysJustification();
         outputFileName = props.getOutputFileName();
     }
@@ -78,7 +78,7 @@ public class GeneratePDF {
         Context context = new Context();
         context.setVariable("days", days);
         context.setVariable("worker", worker);
-        context.setVariable("enterprise", enterprise);
+        context.setVariable("employer", employer);
         context.setVariable("enableJustificationAllDays", enableJustificationAllDays);
         return context;
     }

@@ -3,19 +3,19 @@ package com.github.gaboso.entity;
 public class Employer {
 
     private final String name;
-    private final String cnpj;
+    private final String socialSecurityId;
 
-    public Employer(String name, String cnpj) {
+    public Employer(String name, String socialSecurityId) {
         this.name = name;
-        this.cnpj = cnpj;
+        this.socialSecurityId = socialSecurityId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCnpj() {
-        return cnpj;
+    public String getSocialSecurityId() {
+        return socialSecurityId;
     }
 
 }

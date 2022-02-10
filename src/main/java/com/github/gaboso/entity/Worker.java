@@ -3,19 +3,19 @@ package com.github.gaboso.entity;
 public class Worker {
 
     private final String name;
-    private final String pis;
+    private final String socialSecurityId;
 
-    public Worker(String name, String pis) {
+    public Worker(String name, String socialSecurityId) {
         this.name = name;
-        this.pis = pis;
+        this.socialSecurityId = socialSecurityId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPis() {
-        return pis;
+    public String getSocialSecurityId() {
+        return socialSecurityId;
     }
 
 }
