@@ -7,10 +7,6 @@
         <!--<link rel="stylesheet" type="text/css" media="all" href="style.css"/>-->
 
         <style type="text/css">
-            .underline {
-                text-decoration: underline;
-            }
-
             .bold {
                 font-weight: bold;
             }
@@ -36,13 +32,13 @@
         <div th:each="day : ${days}">
             <p>Data: <label th:text="${day.dayMonthYear}"></label></p>
             <div>
-                <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.durationTime.startHour}"></label>
-                <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.durationTime.startLunchHour}"></label>
+                <label class="bold">( X ) ENTRADA</label> - Horário a registrar <label class="underline" th:text="${day.startHour}"></label>
+                <label class="bold">( X ) SAÍDA ALMOÇO</label> – Horário a registrar <label class="underline" th:text="${day.startLunchHour}"></label>
                 <br>
-                <label class="bold">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="underline" th:text="${day.durationTime.endLunchHour}"></label>
-                <label class="bold">( X ) SAÍDA</label> – Horário a registrar <label class="underline" th:text="${day.durationTime.endHour}"></label>
+                <label class="bold">( X ) RETORNO ALMOÇO</label> - Horário a registrar <label class="underline" th:text="${day.endLunchHour}"></label>
+                <label class="bold">( X ) SAÍDA</label> – Horário a registrar <label class="underline" th:text="${day.endHour}"></label>
                 <div th:switch="${enableJustificationAllDays}">
-                    <p th:case="true">Justificativa: <label class="underline">_____________________________________________________________________________________________________________________________________________________</label></p>
+                    <p th:case="true">Justificativa: <label>_____________________________________________________________________________________________________________________________________________________</label></p>
                 </div>
             </div>
             <br>
@@ -64,8 +60,8 @@
 
         <div class="bold underline">* Não rasurar. Os campos não preenchidos devem ser inutilizados</div>
         <p>A ser preenchido pelo Departamento administrativo</p>
-        <p>Recebido em:_____/_____/_____  Por: ____________________________</p>
-        <p>Inserido no sistema em:_____/_____/_____ Por: _____________________</p>
+        <p>Recebido em: _____/_____/_____  Por: ____________________________</p>
+        <p>Inserido no sistema em: _____/_____/_____ Por: _____________________</p>
 
     </body>
 </html>

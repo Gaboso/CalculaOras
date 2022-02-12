@@ -1,10 +1,15 @@
 package com.github.gaboso.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class Props {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Props.class);
 
     private String workerName;
     private String workerSocialSecurityId;
@@ -24,7 +29,7 @@ public class Props {
         try (InputStream input = Props.class.getClassLoader().getResourceAsStream("config.properties")) {
 
             if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
+                LOGGER.error("Sorry, unable to find config.properties");
                 return;
             }
 
@@ -32,7 +37,7 @@ public class Props {
             properties.load(input);
             loadPropsValues(properties);
         } catch (IOException | NumberFormatException ex) {
-            ex.printStackTrace();
+            LOGGER.error(ex.getMessage(), ex);
         }
     }
 
@@ -91,4 +96,5 @@ public class Props {
     public String[] getDays() {
         return days;
     }
+
 }

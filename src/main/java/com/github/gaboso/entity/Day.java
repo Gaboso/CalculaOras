@@ -3,22 +3,17 @@ package com.github.gaboso.entity;
 public class Day {
 
     private String dayMonthYear;
-    private DurationTime durationTime;
+
+    private String startHour;
+    private String startLunchHour;
+    private String endLunchHour;
+    private String endHour;
 
     public Day() {
     }
 
     public Day(String dayMonthYear) {
         this.dayMonthYear = dayMonthYear;
-    }
-
-    public Day(DurationTime durationTime) {
-        this.durationTime = durationTime;
-    }
-
-    public Day(String dayMonthYear, DurationTime durationTime) {
-        this.dayMonthYear = dayMonthYear;
-        this.durationTime = durationTime;
     }
 
     public String getDayMonthYear() {
@@ -29,12 +24,44 @@ public class Day {
         this.dayMonthYear = dayMonthYear;
     }
 
-    public DurationTime getDurationTime() {
-        return durationTime;
+    public String getStartHour() {
+        return startHour;
     }
 
-    public void setDurationTime(DurationTime durationTime) {
-        this.durationTime = durationTime;
+    public void setStartHour(int startHour, int startMinutes) {
+        this.startHour = formatTime(startHour, startMinutes);
+    }
+
+    private String formatTime(int hour, int minute) {
+        return formatNumber(hour) + ":" + formatNumber(minute);
+    }
+
+    private String formatNumber(int number) {
+        return String.format("%02d", number);
+    }
+
+    public String getStartLunchHour() {
+        return startLunchHour;
+    }
+
+    public void setStartLunchHour(int startLunchHour, int startLunchMinutes) {
+        this.startLunchHour = formatTime(startLunchHour, startLunchMinutes);
+    }
+
+    public String getEndLunchHour() {
+        return endLunchHour;
+    }
+
+    public void setEndLunchHour(int endLunchHour, int endLunchMinutes) {
+        this.endLunchHour = formatTime(endLunchHour, endLunchMinutes);
+    }
+
+    public String getEndHour() {
+        return endHour;
+    }
+
+    public void setEndHour(int endHour, int endMinutes) {
+        this.endHour = formatTime(endHour, endMinutes);
     }
 
 }

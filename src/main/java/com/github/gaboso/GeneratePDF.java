@@ -60,6 +60,15 @@ public class GeneratePDF {
         }
     }
 
+    private Context createThymeleafContext() {
+        Context context = new Context();
+        context.setVariable("days", days);
+        context.setVariable("worker", worker);
+        context.setVariable("employer", employer);
+        context.setVariable("enableJustificationAllDays", enableJustificationAllDays);
+        return context;
+    }
+
     private String getBaseURL() {
         try {
             return FileSystems.getDefault()
@@ -72,15 +81,6 @@ public class GeneratePDF {
         }
 
         return "";
-    }
-
-    private Context createThymeleafContext() {
-        Context context = new Context();
-        context.setVariable("days", days);
-        context.setVariable("worker", worker);
-        context.setVariable("employer", employer);
-        context.setVariable("enableJustificationAllDays", enableJustificationAllDays);
-        return context;
     }
 
 }

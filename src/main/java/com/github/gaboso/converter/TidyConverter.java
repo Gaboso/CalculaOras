@@ -24,8 +24,8 @@ public class TidyConverter {
         tidy.setXHTML(true);
 
         try (
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(html.getBytes(UTF_8));
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(html.getBytes(UTF_8));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
         ) {
             tidy.parseDOM(inputStream, outputStream);
             return outputStream.toString(UTF_8);
