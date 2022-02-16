@@ -32,14 +32,6 @@ public class Day {
         this.startHour = formatTime(startHour, startMinutes);
     }
 
-    private String formatTime(int hour, int minute) {
-        return formatNumber(hour) + ":" + formatNumber(minute);
-    }
-
-    private String formatNumber(int number) {
-        return String.format("%02d", number);
-    }
-
     public String getStartLunchHour() {
         return startLunchHour;
     }
@@ -62,6 +54,14 @@ public class Day {
 
     public void setEndHour(int endHour, int endMinutes) {
         this.endHour = formatTime(endHour, endMinutes);
+    }
+
+    private String formatTime(int hour, int minute) {
+        return formatNumber(hour) + ":" + formatNumber(minute);
+    }
+
+    private String formatNumber(int number) {
+        return String.format("%02d", number);
     }
 
 }
