@@ -3,9 +3,8 @@ package com.github.gaboso.exception;
 public class BadConfigException extends Exception {
 
     public BadConfigException() {
-        super("Quantidade de dias inválida: Caso CUSTOM_DAYS seja TRUE, " +
-                  "é necessário informar valor para todos os dias na variável DAYS da classe Config." +
-                  "\nExemplo: Se QUANTITY_OF_DAYS for 5, devem existir 5 valores no array DAYS.");
+        super("Invalid number of days: If the days.custom property is TRUE, it is necessary to inform a value for all days in the days property." +
+                  "\nExample: If days.quantity is 5, there must be 5 values in the days array.");
     }
 
 }
